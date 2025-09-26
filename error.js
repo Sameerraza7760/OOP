@@ -41,7 +41,7 @@
 const apiData = [
     { id: 1, name: "Ali", skills: ["JS", "React"] },
     { id: 2, name: "Sara", skills: "Python" },
-    { id: 3, name: "Omar" } // missing skills
+    { id: 3, name: "Omar" ,skills:"javascript"} // missing skills
 ]
 
 
@@ -85,27 +85,34 @@ const apiData = [
 
 
 
-
-
-
-
-
 const normolizeData = (apiData) => {
     const apiKeys = ['id', 'name', 'skills']
     const structure = []
-  return apiData.map((obj) => ({
-        ...obj
-    }))
-
-
-    // return structure
-
-    // console.log(data)
-
+    apiData.forEach((obj) => {
+        const temp = {}
+        Object.keys(obj).forEach((key) => {
+            if (obj[key] === 'skills' || Array.isArray(obj['skills'])) {
+                console.log(obj[key])
+                temp[key] = obj[key]
+            }
+           else if (!Array.isArray(obj['skills'])) {
+            // console
+            //  console.log(obj['skills'].spl)
+                temp['skills'] = obj["skills"].split(',')
+            }
+            temp[key] = obj[key]
+        })
+        structure.push(temp)
+    })
+    return structure
 }
 
-
-
 console.log(normolizeData(apiData))
+
+
+
+
+
+
 
 
