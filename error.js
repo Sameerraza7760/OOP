@@ -107,3 +107,5 @@ const normolizeData = (apiData) => {
 
 
 console.log(normolizeData(apiData))
+
+
