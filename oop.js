@@ -16,7 +16,7 @@
 
 // Four pillers Of Oops
 //Abstraction
-//Encapsulation
+//Encapsulation 
 //Inheritence
 //PolymorPhism
 
