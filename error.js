@@ -85,48 +85,48 @@ const apiData = [
 
 
 
-const normolizeData = (apiData) => {
-    const apiKeys = ['id', 'name', 'skills']
-    const structure = []
-    apiData.forEach((obj) => {
-        const temp = {}
-        Object.keys(obj).forEach((key) => {
-            if (key === 'skills') {
-                if (Array.isArray(obj[key])) {
-                    temp[key] = obj[key]
-                }
-                else {
-                    temp[key] = obj[key].split(',')
-                }
-            }
-            else{
-                temp[key] = obj[key]
-                temp['skills'] = []
-            }
+// const normolizeData = (apiData) => {
+//     const apiKeys = ['id', 'name', 'skills']
+//     const structure = []
+//     apiData.forEach((obj) => {
+//         const temp = {}
+//         Object.keys(obj).forEach((key) => {
+//             if (key === 'skills') {
+//                 if (Array.isArray(obj[key])) {
+//                     temp[key] = obj[key]
+//                 }
+//                 else {
+//                     temp[key] = obj[key].split(',')
+//                 }
+//             }
+//             else{
+//                 temp[key] = obj[key]
+//                 temp['skills'] = []
+//             }
 
-        })
-        structure.push(temp)
-    })
-    return structure
-}
+//         })
+//         structure.push(temp)
+//     })
+//     return structure
+// }
 
-console.log(normolizeData(apiData))
-
-
+// console.log(normolizeData(apiData))
 
 
 
 
 
 
-const normalizeUsers = (users) => {
-  return users.map(user => ({
-    ...user,
-    skills: Array.isArray(user.skills) ? user.skills : user.skills ? [user.skills] : []
-  }))
-}
 
-console.log(normalizeUsers(apiData))
+
+// const normalizeUsers = (users) => {
+//   return users.map(user => ({
+//     ...user,
+//     skills: Array.isArray(user.skills) ? user.skills : user.skills ? [user.skills] : []
+//   }))
+// }
+
+// console.log(normalizeUsers(apiData))
 
 
 
@@ -152,3 +152,24 @@ const user = {
   profile: { name: "Ali", age: 20 },
   contact: { email: "ali@mail.com", phone: "12345" }
 }
+
+
+
+const flatenObject = (users)=>{
+    const structureObj = {}
+    Object.keys(users).forEach((item)=>{
+if (typeof users[item] === 'object' && users[item] !== null) {
+    Object.keys(users[item]).forEach((nestObj)=>{
+    structureObj[item][nestObj] = users[item][nestObj]
+    })
+    // structureObj[item] = users[item]
+}
+else{
+     structureObj[item] = users[item]
+}
+    })
+    return structureObj
+}
+
+
+console.log(flatenObject(user))
