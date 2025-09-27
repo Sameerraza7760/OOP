@@ -156,14 +156,9 @@ const flatenObject = (users)=>{
     const structureObj = {}
     Object.keys(users).forEach((item)=>{
 if (typeof users[item] === 'object' && users[item] !== null) {
-    Object.keys(users[item]).forEach((nestObj)=>{
-        if (item==='contact') {
-             structureObj[item][nestObj] = users[item][nestObj]
-        }
-
-    structureObj[nestObj] = users[item][nestObj]
+    Object.keys(users[item]).forEach((nested)=>{
+        structureObj[`${item}.${nested}`] = users[item][nested]
     })
-    // structureObj[item] = users[item]
 }
 else{
      structureObj[item] = users[item]
@@ -174,3 +169,6 @@ else{
 
 
 console.log(flatenObject(user))
+
+
+ 
