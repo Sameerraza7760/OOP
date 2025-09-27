@@ -152,15 +152,16 @@ const user = {
   profile: { name: "Ali", age: 20 },
   contact: { email: "ali@mail.com", phone: "12345" }
 }
-
-
-
 const flatenObject = (users)=>{
     const structureObj = {}
     Object.keys(users).forEach((item)=>{
 if (typeof users[item] === 'object' && users[item] !== null) {
     Object.keys(users[item]).forEach((nestObj)=>{
-    structureObj[item][nestObj] = users[item][nestObj]
+        if (item==='contact') {
+             structureObj[item][nestObj] = users[item][nestObj]
+        }
+
+    structureObj[nestObj] = users[item][nestObj]
     })
     // structureObj[item] = users[item]
 }
