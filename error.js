@@ -41,7 +41,7 @@
 const apiData = [
     { id: 1, name: "Ali", skills: ["JS", "React"] },
     { id: 2, name: "Sara", skills: "Python" },
-    { id: 3, name: "Omar"} // missing skills
+    { id: 3, name: "Omar" } // missing skills
 ]
 
 
@@ -160,7 +160,6 @@ if (typeof users[item] === 'object' && users[item] !== null) {
         if (item==='contact') {
              structureObj[item][nestObj] = users[item][nestObj]
         }
-
     structureObj[nestObj] = users[item][nestObj]
     })
     // structureObj[item] = users[item]
@@ -174,3 +173,16 @@ else{
 
 
 console.log(flatenObject(user))
+
+
+
+
+
+
+
+
+
+
+
+
+
