@@ -170,4 +170,76 @@ else{
 console.log(flatenObject(user))
 
 
- 
+
+
+
+
+
+
+
+// const user = {
+//     id: 1,
+//     profile: { name: "Ali", age: 20 },
+//     contact: {
+//         email: "ali@mail.com", phone: "12345", detail: {
+//             fullName: "AliAhsan",
+
+//         }
+//     }
+// }
+
+
+
+
+// const flatObject = (obj) => {
+//     let structureObj={}
+//     Object.keys(obj).forEach((keys) => {
+//         if (typeof obj[keys] === 'object' && obj[keys] !== null) {
+//            const res = flatObject(obj[keys])
+//            Object.assign(structureObj,res)
+//            return
+//         }
+//         structureObj[keys] = obj[keys]
+//     })
+//     return structureObj
+// }
+
+// console.log(flatObject(user))
+
+
+
+
+
+
+
+
+
+
+
+// const user = {
+//     id: 1,
+//     profile: { name: "Ali", age: 20 },
+//     contact: {
+//         email: "ali@mail.com", phone: "12345", detail: {
+//             fullName: "AliAhsan",
+
+//         }
+//     }
+// }
+
+
+
+
+// const flatObject = (obj,parient="") => {
+
+
+
+
+// }
+
+// console.log(flatObject(user))
+
+
+
+
+
