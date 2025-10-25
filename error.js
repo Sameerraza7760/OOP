@@ -161,6 +161,7 @@ if (typeof users[item] === 'object' && users[item] !== null) {
 }
 else{
      structureObj[item] = users[item]
+     
 }
     })
     return structureObj
