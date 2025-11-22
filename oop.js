@@ -297,6 +297,10 @@ animals.forEach((animal) => animal.speak());
 // polymorphysim 
  
 
+
+
+
+
 // Step 1: Parent Class (Vehicle) 
 
 class Vehicle {
