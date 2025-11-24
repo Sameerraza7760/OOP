@@ -393,6 +393,8 @@ class Motorcycle {
 
   stop() {
     console.log("The vehicle is stopping.");
+
+    
   }
 }
 
