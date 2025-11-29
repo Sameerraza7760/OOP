@@ -339,7 +339,7 @@ class Motorcycle extends Vehicle {
     console.log("The motorcycle is starting with a loud rev.");
   }
 }
-
+ 
 
 // Step 3: Using the Classes
 // Now, you can create instances of Car and Motorcycle and call the start() method. Notice that
@@ -393,8 +393,6 @@ class Motorcycle {
 
   stop() {
     console.log("The vehicle is stopping.");
-
-    
   }
 }
 
