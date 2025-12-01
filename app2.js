@@ -152,7 +152,6 @@ const checkVowel = (arr) => {
   arr.forEach((element) => {
     if (vowel.includes(element)) {
         return
-    
     }
       length.push(element);
   });
