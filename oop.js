@@ -429,3 +429,318 @@ class Motorcycle {
 
 
 
+
+
+// import { NextRequest, NextResponse } from 'next/server';
+// import ConnectedEmail from '~/models/connectedEmail';
+// import {
+//   validateUser,
+//   sendEmailUsingCustomSmtp,
+//   sendEmailUsingAppPassword,
+//   sendEmailUsingGmail,
+//   sendEmailUsingOutlook,
+// } from '~/utils/helper';
+// import axios from 'axios';
+// import { google } from 'googleapis';
+
+// export async function POST(req: NextRequest) {
+//   try {
+//     const formData = await req.formData();
+
+//     const body = {
+//       from: formData.get('from') as string,
+//       to: formData.get('to') as string,
+//       subject: formData.get('subject') as string,
+//       message: formData.get('message') as string,
+//       cc: formData.get('cc') as string | null,
+//     };
+
+//     // simple email helpers
+//     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     // normalize list: split on commas or semicolons, strip display names like "Name <addr>"
+//     const parseEmails = (list?: string) =>
+//       !list
+//         ? []
+//         : list
+//             .split(/[,;]+/)
+//             .map((s) => {
+//               const trimmed = s.trim();
+//               const match = trimmed.match(/<([^>]+)>$/);
+//               return match ? match[1].trim() : trimmed;
+//             })
+//             .filter(Boolean);
+//     const validateEmails = (list?: string) =>
+//       parseEmails(list).every((e) => emailRegex.test(e));
+//     const findInvalidEmail = (list?: string) => {
+//       const emails = parseEmails(list);
+//       return emails.find((e) => !emailRegex.test(e)) || null;
+//     };
+
+//     const user = await validateUser();
+//     if (!user) {
+//       return NextResponse.json(
+//         { status: false, message: 'Unauthorized.' },
+//         { status: 401 }
+//       );
+//     }
+//     console.log('user', user);
+//     const connectedEmail = await ConnectedEmail.findOne({ emailId: body.from });
+
+//     if (!connectedEmail) {
+//       return NextResponse.json(
+//         { status: false, message: 'No connected email found.' },
+//         { status: 400 }
+//       );
+//     }
+
+//     if (connectedEmail.type === 'gmail') {
+//       // validate recipients
+//       const invalidTo = findInvalidEmail(body.to);
+//       const invalidCc = body.cc ? findInvalidEmail(body.cc) : null;
+//       if (invalidTo || invalidCc) {
+//         const bad = invalidTo || invalidCc;
+//         console.error('Invalid email address detected:', bad);
+//         return NextResponse.json(
+//           { status: false, message: `Invalid recipient or cc address: ${bad}` },
+//           { status: 400 }
+//         );
+//       }
+
+//       const oauth2Client = new google.auth.OAuth2(
+//         process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
+//         process.env.GOOGLE_CLIENT_SECRET
+//       );
+
+//       oauth2Client.setCredentials({
+//         refresh_token: connectedEmail.gmailRefreshToken,
+//       });
+
+//       let accessToken: string | undefined;
+//       try {
+//         const res: any = await oauth2Client.refreshAccessToken();
+//         accessToken = res?.credentials?.access_token;
+//         if (!accessToken)
+//           throw new Error('Failed to obtain gmail access token');
+//       } catch (err: any) {
+//         console.error(
+//           'Failed to refresh Gmail access token:',
+//           err?.response?.data || err.message
+//         );
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to refresh gmail access token',
+//             error: err?.response?.data || err.message,
+//           },
+//           { status: 500 }
+//         );
+//       }
+
+//       try {
+//         const ccHeader = parseEmails(body.cc).join(', ');
+//         const headers: any = {};
+//         if (ccHeader) headers.Cc = ccHeader;
+
+//         const res = await sendEmailUsingGmail(
+//           accessToken,
+//           body.to,
+//           body.subject,
+//           body.message,
+//           headers
+//         );
+//         return NextResponse.json(
+//           {
+//             status: true,
+//             message: 'Email sent successfully',
+//             data: res.data || res,
+//           },
+//           { status: 200 }
+//         );
+//       } catch (err: any) {
+//         console.error('Gmail send error:', err?.response?.data || err.message);
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to send via Gmail',
+//             error: err?.response?.data || err.message,
+//           },
+//           { status: 500 }
+//         );
+//       }
+//     } else if (connectedEmail.type === 'outlook') {
+//       // validate recipients and require env vars for client credentials
+//       if (
+//         !process.env.OUTLOOK_CLIENT_ID ||
+//         !process.env.OUTLOOK_CLIENT_SECRET
+//       ) {
+//         console.error('Missing Outlook client id/secret env vars');
+//         return NextResponse.json(
+//           { status: false, message: 'Email provider misconfigured' },
+//           { status: 500 }
+//         );
+//       }
+
+//       const invalidTo = findInvalidEmail(body.to);
+//       const invalidCc = body.cc ? findInvalidEmail(body.cc) : null;
+//       if (invalidTo || invalidCc) {
+//         const bad = invalidTo || invalidCc;
+//         console.error('Invalid email address detected:', bad);
+//         return NextResponse.json(
+//           { status: false, message: `Invalid recipient or cc address: ${bad}` },
+//           { status: 400 }
+//         );
+//       }
+
+//       const tokenEndpoint =
+//         'https://login.microsoftonline.com/common/oauth2/v2.0/token';
+
+//       const params = new URLSearchParams();
+//       params.append('client_id', process.env.OUTLOOK_CLIENT_ID);
+//       params.append('client_secret', process.env.OUTLOOK_CLIENT_SECRET);
+//       params.append('grant_type', 'refresh_token');
+//       params.append('refresh_token', connectedEmail.outlookRefreshToken);
+//       params.append('scope', 'https://graph.microsoft.com/.default');
+
+//       let access_token: string | undefined;
+//       try {
+//         const tokenResponse = await axios.post(tokenEndpoint, params, {
+//           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+//         });
+//         if (tokenResponse.data.error) {
+//           console.error('Outlook token error:', tokenResponse.data);
+//           return NextResponse.json(
+//             { status: false, error: tokenResponse.data.error_description },
+//             { status: 400 }
+//           );
+//         }
+//         access_token = tokenResponse.data.access_token;
+//       } catch (err: any) {
+//         console.error(
+//           'Failed to get Outlook token:',
+//           err?.response?.data || err.message
+//         );
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to refresh outlook token',
+//             error: err?.response?.data || err.message,
+//           },
+//           { status: 500 }
+//         );
+//       }
+
+//       try {
+//         const toRecipients = parseEmails(body.to).map((addr) => ({
+//           emailAddress: { address: addr },
+//         }));
+//         const ccRecipients = parseEmails(body.cc).map((addr) => ({
+//           emailAddress: { address: addr },
+//         }));
+
+//         const emailResponse = await axios.post(
+//           'https://graph.microsoft.com/v1.0/me/sendMail',
+//           {
+//             message: {
+//               subject: body.subject,
+//               body: { contentType: 'HTML', content: body.message },
+//               toRecipients,
+//               ccRecipients,
+//             },
+//             saveToSentItems: 'true',
+//           },
+//           {
+//             headers: {
+//               Authorization: `Bearer ${access_token}`,
+//               'Content-Type': 'application/json',
+//             },
+//           }
+//         );
+
+//         return NextResponse.json(
+//           {
+//             status: true,
+//             message: 'Email sent successfully',
+//             data: emailResponse.data,
+//           },
+//           { status: 200 }
+//         );
+//       } catch (err: any) {
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to send via Outlook',
+//             error: err?.response?.data || err.message,
+//           },
+//           { status: 500 }
+//         );
+//       }
+//     } else if (connectedEmail.type === 'gmail-app-password') {
+//       const res = await sendEmailUsingAppPassword(
+//         connectedEmail,
+//         body.to,
+//         body.subject,
+//         body.message
+//       );
+
+//       if (res.status) {
+//         return NextResponse.json(
+//           {
+//             status: true,
+//             message: 'Email sent successfully',
+//             data: res.data,
+//           },
+//           { status: 200 }
+//         );
+//       } else {
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to send email',
+//           },
+//           { status: 500 }
+//         );
+//       }
+//     } else if (connectedEmail.type === 'custom') {
+//       const res = await sendEmailUsingCustomSmtp(
+//         connectedEmail,
+//         body.to,
+//         body.subject,
+//         body.message
+//       );
+
+//       if (res.status) {
+//         return NextResponse.json(
+//           {
+//             status: true,
+//             message: 'Email sent successfully',
+//             data: res.data,
+//           },
+//           { status: 200 }
+//         );
+//       } else {
+//         return NextResponse.json(
+//           {
+//             status: false,
+//             message: 'Failed to send email',
+//           },
+//           { status: 500 }
+//         );
+//       }
+//     } else {
+//       return NextResponse.json(
+//         {
+//           status: false,
+//           message: `Unsupported email type: ${connectedEmail.type}`,
+//         },
+//         { status: 400 }
+//       );
+//     }
+//   } catch (error: any) {
+//     console.error('Error sending email:', error);
+
+//     return NextResponse.json(
+//       { status: false, message: 'Error sending email', error: error.message },
+//       { status: 500 }
+//     );
+//   }
+// }

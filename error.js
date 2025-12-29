@@ -234,8 +234,6 @@ const flatObject = (obj, parient = "") => {
     }
   });
   return flatObj;
-
-  
 };
 
 console.log(flatObject(nestedObject));
