@@ -54,8 +54,6 @@ console.log(checkParindrome("madam")); // true
 
 // true
 
-
-
 const findFactorial = (num) => {
   if (num === 0 || num === 1) return 1;
   return num * findFactorial(num - 1);
@@ -92,7 +90,7 @@ console.log(
     [1, 2],
     [3, 4],
     [5, 6],
-  ])
+  ]),
 ); // [1,2,3,4,5,6]
 
 // clousure
@@ -355,4 +353,51 @@ const twoArrayConcat = (arr, arr2) => {
 const flatArray = (arr) => {
   return arr.flat(Infinity);
 };
+
+const giveparindrome = (value) => {
+  if (typeof value === "number") {
+    return;
+  }
+  const reverseValue = value.split("").reverse().join("");
+  if (reverseValue === value) {
+    return "parindrome";
+  } else {
+    return "not ";
+  }
+};
+
+const vowel = ["a", "e", "i", "o", "u"];
+
+const checkVowel = (arr) => {
+  let CountVowel = [];
+  arr.forEach((element) => {
+    if (vowel.includes(element)) {
+      CountVowel.push(element);
+    }
+  });
+  return CountVowel;
+};
+
+const multiply = (num1, num2) => {
+  let result = 0;
+  for (let i = 0; i < num2; i++) {
+    result += num1;
+  }
+  return result;
+};
+
+const factorial = (num) => {
+  if (num === 1 || num === 0) {
+    return 1;
+  }
+
+  return num * factorial(num - 1);
+};
+
+
+
+
+
+
+
 
