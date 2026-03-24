@@ -398,39 +398,6 @@ class Motorcycle {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import { NextRequest, NextResponse } from 'next/server';
 // import ConnectedEmail from '~/models/connectedEmail';
 // import {
@@ -743,7 +710,5 @@ class Motorcycle {
 //       { status: 500 }
 //     );
 //   }
-
-
 
 // }
