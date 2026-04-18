@@ -73,7 +73,6 @@ const apiData = [
 //             }
 
 
-
 //         })
 //         structure.push(temp)
 //     })
