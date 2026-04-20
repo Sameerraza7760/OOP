@@ -67,6 +67,7 @@ const apiData = [
 //                     temp[key] = obj[key].split(',')
 //                 }
 //             }
+
 //             else{
 //                 temp[key] = obj[key]
 //                 temp['skills'] = []
