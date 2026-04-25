@@ -71,6 +71,9 @@ const apiData = [
 //                 temp[key] = obj[key]
 //                 temp['skills'] = []
 //             }
+
+
+
 //         })
 //         structure.push(temp)
 //     })
