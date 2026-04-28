@@ -77,6 +77,8 @@ const apiData = [
 //     return structure
 // }
 
+
+
 // console.log(normolizeData(apiData))
 
 // const normalizeUsers = (users) => {
