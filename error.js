@@ -79,8 +79,6 @@ const apiData = [
 
 
 
-
-
 // console.log(normolizeData(apiData))
 
 // const normalizeUsers = (users) => {
