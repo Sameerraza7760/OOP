@@ -88,6 +88,9 @@ const newUser2 = new User("usman", 21);
 
 // the Promise also constructor
 
+
+
+
 // const newPromise = new Promise();
 // const newDate = new Date();
 
