@@ -5,6 +5,8 @@ const multip = (num1, num2) => {
   }
 
   
+
+
   return result;
 };
 console.log(multip(2, 8));
