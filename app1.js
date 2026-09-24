@@ -4,7 +4,6 @@ const multip = (num1, num2) => {
     result += num1;
   }
 
-  
 
   return result;
 };
